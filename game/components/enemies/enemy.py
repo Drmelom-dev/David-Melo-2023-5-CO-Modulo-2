@@ -1,18 +1,19 @@
 import pygame
 import random
 from pygame.sprite import Sprite
-from game.utils.constants import ENEMY_1, SCREEN_HEIGHT, SCREEN_WIDTH
+from game.utils.constants import ENEMY_1, SCREEN_HEIGHT, SCREEN_WIDTH, ENEMY_2
 
 class Enemy(Sprite):
     ENEMY_WIDTH = 40
     ENEMY_HEIGHT = 60
-    X_POS_LIST = [50,100,150,200,250,300,350,400,450,500,550]
+    X_POS_LIST = [x for x in range(50, 1001, 50)]
     Y_POS = 20
     SPEED_X = 5
     SEPEED_Y = 4
     MOV_X = {0:'left',1:'right'}
+    ENEMIES_IMAGES = [ENEMY_1,ENEMY_2]
     def __init__(self):
-        self.image = pygame.transform.scale(ENEMY_1,(self.ENEMY_WIDTH, self.ENEMY_HEIGHT))
+        self.image = pygame.transform.scale(self.ENEMIES_IMAGES[random.randint(0,1)],(self.ENEMY_WIDTH, self.ENEMY_HEIGHT))
         self.rect = self.image.get_rect()
         self.rect.x = self.X_POS_LIST[random.randint(0,10)]
         self.rect.y = self.Y_POS
