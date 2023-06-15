@@ -25,3 +25,6 @@ class EnemyManager:
             enemy = Enemy(enemy_type, x_speed, y_speed, move_x_for)    
         if len(self.enemies)<1:
             self.enemies.append(enemy)
+            
+    def enemy_death(self):
+        self.enemies.pop()       
