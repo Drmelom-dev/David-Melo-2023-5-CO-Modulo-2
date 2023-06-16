@@ -1,1 +1,8 @@
 pygame
+
+# First-Class -> Avance de la clase (subir hasta antes de las 00:00)
+# First-Class-Homework -> Para la tarea (subir entre 17:25 y 17:30)
+# Second-Class -> Avance de la clase (subir hasta antes de las 00:00)
+# Second-Class-Homework -> Para la tarea (subir entre 17:25 y 17:30)
+# Third-Class -> Avance de la clase (subir hasta antes de las 00:00)
+# Third-Class-Homework -> Para la tarea (subir entre 17:25 y 17:30)
