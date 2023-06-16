@@ -14,7 +14,8 @@ class BulletManager:
         if bullet.rect.colliderect(enemy.rect) and bullet.owner == 'player':
             game.enemy_manager.enemies.remove(enemy)
             self.bullets.remove(bullet)
-            game.update_score()
+            game.score+=1
+            game.update_highest_score()
 
     for bullet in self.enemy_bullets:
       bullet.update(self.enemy_bullets)

@@ -5,12 +5,14 @@ class Menu:
     HALF_SCREEN_WIDTH = SCREEN_WIDTH//2
     HALF_SCREEN_HEIGHT = SCREEN_HEIGHT//2
     
-    def __init__(self, message, screen):
+    def __init__(self, message, screen,position):
         screen.fill((255,255,255))
         self.font = pygame.font.Font(FONT_STYLE, 30) 
         self.text = self.font.render(message, True, (0,0,0))
         self.text_rect = self.text.get_rect()
-        self.text_rect.center = (self.HALF_SCREEN_WIDTH, self.HALF_SCREEN_HEIGHT)
+        self.text_rect.center = (position)
+        self.menu_scores=False
+     
         
     
     def update(self, game):
@@ -29,12 +31,23 @@ class Menu:
             
     
     def draw(self, screen):
-        screen.blit(self.text, self.text_rect)
+        if self.menu_scores == False:
+            screen.blit(self.text, self.text_rect)
+        else:
+            for text, rect in zip(self.texts, self.text_rects):
+                screen.blit(text, rect)   
+        
     
     def reset(self, screen):
         screen.fill((255,255,255))
         
-    def update_message(self, message):
-        self.text = self.font.render(message, True , (0,0,0)) 
-        self.text_rect = self.text.get_rect()
-        self.text_rect.center = (self.HALF_SCREEN_WIDTH, self.HALF_SCREEN_HEIGHT)     
+    def update_message(self, messages,positions):
+        self.texts = []
+        self.text_rects = []
+        for message,position in zip(messages,positions):
+            text = self.font.render(message, True , (0,0,0)) 
+            text_rect = text.get_rect()
+            text_rect.center = (position) 
+            self.texts.append(text)
+            self.text_rects.append(text_rect)  
+            self.menu_scores=True  

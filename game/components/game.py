@@ -8,6 +8,8 @@ from game.components.menu import Menu
 
 
 class Game:
+    CENTER_SCREEN=(SCREEN_WIDTH//2,SCREEN_HEIGHT//2)
+    
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(TITLE)
@@ -21,10 +23,12 @@ class Game:
         self.player = Spaceship()
         self.enemy_manager = EnemyManager()
         self.bullet_manager = BulletManager()
-        self.menu = Menu('Press Any Key To Start....', self.screen)
+        self.menu = Menu('Press Any Key To Start....', self.screen, self.CENTER_SCREEN)
         self.running = False
         self.death_count = 0
         self.score = 0
+        self.highest_score  = 0
+        
         
     def execute(self):
         self.running = True
@@ -79,7 +83,9 @@ class Game:
     def show_menu(self):
         self.menu.reset(self.screen)
         if self.death_count > 0:
-            self.menu.update_message(f'Game over. Press any key to restart')
+            messages =['Game over. Press any key to restart',f'Your score: {self.score}' , f'Highest score : {self.highest_score }', f'Total deaths: {self.death_count}']
+            positions = [self.CENTER_SCREEN, (self.CENTER_SCREEN[0],self.CENTER_SCREEN[1]+50),(self.CENTER_SCREEN[0],self.CENTER_SCREEN[1]+100),(self.CENTER_SCREEN[0],self.CENTER_SCREEN[1]+150)]
+            self.menu.update_message(messages,positions)
         self.menu.draw(self.screen)
         half_screen_width = SCREEN_WIDTH//2
         half_screen_height = SCREEN_HEIGHT//2
@@ -87,8 +93,9 @@ class Game:
         self.screen.blit(icon,(half_screen_width - 50,half_screen_height - 150))
         self.menu.update(self)
         
-    def update_score(self):
-        self.score += 1
+    def update_highest_score(self):
+        if self.score > self.highest_score :
+            self.highest_score  = self.score
    
     def draw_score(self):
         font = pygame.font.Font(FONT_STYLE, 30)
