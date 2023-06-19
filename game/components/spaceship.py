@@ -1,7 +1,8 @@
 import pygame
 from pygame.sprite import Sprite
+from pygame import mixer
 
-from game.utils.constants import SPACESHIP, SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_TYPE 
+from game.utils.constants import SPACESHIP, SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_TYPE
 from game.components.bullets.bullet import Bullet
 
 
@@ -11,6 +12,10 @@ class Spaceship(Sprite):
   HALF_SCREEN_HEIGHT = SCREEN_HEIGHT // 2
   X_POS = (SCREEN_WIDTH // 2) - SPACESHIP_WIDTH
   Y_POS = 500
+  pygame.mixer.pre_init(44100, -16, 2, 512)
+  mixer.init()
+  laser_fx = pygame.mixer.Sound("game/assets/Sound/laser.wav")
+  laser_fx.set_volume(0.25)
   
   def __init__(self):
     self.image = pygame.transform.scale(SPACESHIP, (self.SPACESHIP_WIDTH, self.SPACESHIP_HEIGHT))
@@ -21,6 +26,7 @@ class Spaceship(Sprite):
     self.power_up_type = DEFAULT_TYPE
     self.has_power_up = False
     self.power_time_up = 0
+    
     
   def update(self, user_input, game):
     if user_input[pygame.K_LEFT]:
@@ -33,32 +39,51 @@ class Spaceship(Sprite):
       self.move_down()
     elif user_input[pygame.K_SPACE]:
       self.shoot(game)
+      self.laser_fx.play()
       
   def move_left(self):
     self.rect.x -= 10
     if self.rect.left < 0:
       self.rect.x = SCREEN_WIDTH - self.SPACESHIP_WIDTH
     
+    if self.power_up_type =="speed_plus":
+      self.rect.x -= 20
+         
+    
   def move_right(self):
     self.rect.x += 10
     if self.rect.right >= SCREEN_WIDTH - self.SPACESHIP_WIDTH:
       self.rect.x = 0
-    
+    if self.power_up_type =="speed_plus":
+      self.rect.x += 20
   def move_up(self):
     if self.rect.y > self.HALF_SCREEN_HEIGHT:
       self.rect.y -= 10
-    
+    if self.power_up_type =="speed_plus":
+      self.rect.y -= 20
   def move_down(self):
     if self.rect.y < SCREEN_HEIGHT - self.SPACESHIP_HEIGHT:
       self.rect.y += 10
+    if self.power_up_type =="speed_plus":
+      self.rect.y += 20  
   
   def draw(self, screen):
     screen.blit(self.image, (self.rect.x, self.rect.y))
     
   def shoot(self, game):
     bullet = Bullet(self)
-    game.bullet_manager.add_bullet(bullet)
-    
+    game.bullet_manager.add_bullet(bullet,3)
+    if  self.power_up_type =="double_shot":
+      bullet1 = Bullet(self)
+      bullet2 = Bullet(self)
+      
+      bullet1.rect.center = (self.rect.center[0] + 20, self.rect.center[1])
+      bullet2.rect.center = (self.rect.center[0] - 20, self.rect.center[1])
+      game.bullet_manager.add_bullet(bullet1,32)
+      game.bullet_manager.add_bullet(bullet2,32)
+    elif self.power_up_type == 'speed_plus':
+      bullet = Bullet(self)
+      game.bullet_manager.add_bullet(bullet,20)
   def reset(self):
     self.rect.x = self.X_POS
     self.rect.y = self.Y_POS
